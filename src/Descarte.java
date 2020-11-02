@@ -1,53 +1,63 @@
 
 
-class Descarte {
+class Descarte extends Mazo{
 	
-	private Carta[] cartas;
-	
-	private int ultima;
 	
 	public Descarte() {
-		ultima=0;
-		cartas=new Carta[52-28];
+		super(52-28,"Descarte");
+	}
+	
+	@Override
+	public void mostrarContenido() {
+		int primeraVisible=ultima-3;
+		if (primeraVisible<0) {
+			primeraVisible=0;
+		}
+		for (int i=primeraVisible;i<ultima;i++) {
+			cartas[i].mostrar();
+		}
 	}
 
-	public void mostrar() {
-		GestorIO gestorIO=new GestorIO();
-		gestorIO.out("\nDescarte:");
+	public void moverA(Palo palo) {
+		assert palo!=null;
 		if (this.vacia()) {
-			gestorIO.out("<VACIA>");
-		}else{
-			int primeraVisible=ultima-3;
-			if (primeraVisible<0) {
-				primeraVisible=0;
-			}
-			for (int i=primeraVisible;i<ultima;i++) {
-				cartas[i].mostrar();
+			new GestorIO().out("Error!! No hay cartas en descarte");
+		}else {
+			Carta carta=this.sacar();
+			if (palo.apilable(carta)) {
+				palo.poner(carta);
+			}else {
+				this.poner(carta);
+				new GestorIO().out("Error!! No se pude realizar este movimiento");
 			}
 		}
 	}
 
-	private boolean vacia() {
-		return ultima==0;
-	}
-
-	public void moverA(Palo palo) {
-		
-	}
-
 	public void moverA(Columna columna) {
-		// TODO Auto-generated method stub
-		
+		if (this.vacia()) {
+			new GestorIO().out("Error!! No hay cartas en descarte");
+		}else {
+			Carta carta=this.sacar();
+			if (columna.apilable(carta)) {
+				columna.poner(carta);
+			}else {
+				this.poner(carta);
+				new GestorIO().out("Error!! No se pude realizar este movimiento");
+			}
+		}
 	}
 
 	public void voltear(Baraja baraja) {
-		// TODO Auto-generated method stub
-		
+		if (this.vacia()) {
+            new GestorIO().out("Error!!! No hay cartas en descarte");
+        } else {
+            while (!this.vacia()) {
+                Carta carta = this.sacar();
+                carta.voltear();
+                baraja.poner(carta);
+            }
+        }
 	}
 
-	public void poner(Carta carta) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
